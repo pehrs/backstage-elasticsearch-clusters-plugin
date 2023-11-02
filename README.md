@@ -1,6 +1,6 @@
 # backstage-elasticsearch-clusters-plugin
 
-Welcome to the elasticsearch-clusters plugin!
+Welcome to the elasticsearch-clusters [backstage](https://backstage.io/) plugin!
 
 The target of these plugins are organizations that run multiple Elasticsearch clusters (in multiple regions) and want to quicky have an overview of their status.
 
@@ -19,14 +19,14 @@ Make sure you have created a [backstage-app](https://backstage.io/docs/getting-s
 ### To install these plugins run:
 
    Yarn: (FIXME: This is still untested and I do not know how to publish the plugins yet)
-   
+
    ```bash
    # From your Backstage app root directory
    cd /the/root/of/your/backstage/app
    yarn add --cwd packages/app @pehrs/backstage-elasticsearch-clusters-backend
    yarn add --cwd packages/app @pehrs/backstage-elasticsearch-clusters
    ```
-   
+
    Alternatively, clone this repo and copy the plugins into place:
    ```bash
    cd /some/tmp/path
@@ -90,11 +90,17 @@ Make sure you have created a [backstage-app](https://backstage.io/docs/getting-s
 	  <Route path="/elasticsearch-clusters" element={<ElasticsearchClustersPage />} />
       ```
 
+   *  [OPTIONAL] Add to [`packages/app/src/components/Root/Root.tsx`](packages/app/src/components/Root/Root.tsx):
+      ```tsx
+	  import EsLogo from '@material-ui/icons/Search';
+	  ...
+      <SidebarItem icon={EsLogo} to="elasticsearch-clusters" text="ES Clusters" />
+      ```
 
 ### Configure the plugin
 
    In order for the elasticsearch plugins to work you need to add a configuration to your `/app-config.yaml`
-   
+
    Most basic configuration should just list your Elasticsearch cluster links:
    ```yaml
    elasticsearch-clusters:
@@ -106,9 +112,9 @@ Make sure you have created a [backstage-app](https://backstage.io/docs/getting-s
        - "http://es2.us-central1.my-domain.net:9200"
        - "http://es2.us-east1.my-domain.net:9200"
    ```
-   
+
    And here's a more elaborate configuration:
-   
+
    ```yaml
    elasticsearch-clusters:
      cluster_links:
@@ -124,6 +130,7 @@ Make sure you have created a [backstage-app](https://backstage.io/docs/getting-s
      # [Optional] Link to kibana (available variables: cluster_host)
      kibana_link: "http://{cluster_host}:5601"
    ```
+
 
 ## TODO
 

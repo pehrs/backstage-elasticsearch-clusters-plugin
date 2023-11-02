@@ -30,13 +30,13 @@ import {
 } from '@backstage/core-components';
 import { ExampleFetchComponent } from '../EsClusterList';
 import { ExampleFetchComponent2 } from '../EsClusterList/ExampleFetchComponent';
-import { ExClustersList } from '../EsClusterList/EsClustersList';
+import { EsClustersList } from '../EsClusterList/EsClustersList';
 
 
 export const EsClusterPage = () => (
   <Page key={crypto.randomUUID()} themeId="tool">
     <Header key={crypto.randomUUID()} title="Elasticsearch Clusters" subtitle="Manage your ES clusters.">
-      <HeaderLabel url="https://github.com/pehrs" label="Owner" value="@pehrs" />
+      <HeaderLabel url="https://github.com/pehrs/backstage-elasticsearch-clusters-plugin" label="Github" value="@pehrs" />
       <HeaderLabel label="Lifecycle" value="Alpha" />
     </Header>
     <Content key={crypto.randomUUID()}>
@@ -52,7 +52,7 @@ export const EsClusterPage = () => (
           </InfoCard>
         </Grid> */}
         <Grid key={crypto.randomUUID()} item>
-          <ExClustersList key={crypto.randomUUID()}/>
+          <EsClustersList key={crypto.randomUUID()}/>
         </Grid>
       </Grid>
     </Content>

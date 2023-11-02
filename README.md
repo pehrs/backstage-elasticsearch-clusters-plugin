@@ -2,7 +2,7 @@
 
 Welcome to the elasticsearch-clusters plugin!
 
-The target of these plugins are orgnaizations that run multiple Elasticsearch clusters (in multiple regions) and want to quicky have an overview of their status.
+The target of these plugins are organizations that run multiple Elasticsearch clusters (in multiple regions) and want to quicky have an overview of their status.
 
 This is a combination of 2 plugins (the [frontend](./plugins/elasticsearch-clusters/README.md) and the [backend](./plugins/elasticsearch-clusters-backend/README.md)) that will give an overview of your Elasticsearch clusters.
 

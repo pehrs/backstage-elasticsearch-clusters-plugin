@@ -11,7 +11,7 @@ const useStyles = makeStyles({
     },
 });
 
-export const ExClustersList = () => {
+export const EsClustersList = () => {
 
     const classes = useStyles();
     const [clusterInfo, setClusterInfo] = useState(null)

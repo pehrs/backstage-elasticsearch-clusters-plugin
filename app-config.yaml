@@ -74,7 +74,7 @@ catalog:
     entityFilename: catalog-info.yaml
     pullRequestBranchName: backstage-integration
   rules:
-    - allow: [Component, System, API, Resource, Location]
+    - allow: [Component, System, API, Resource, Location, Domain]
   locations:
     # Local example data, file locations are relative to the backend process, typically `packages/backend`
     - type: file
@@ -92,6 +92,10 @@ catalog:
       rules:
         - allow: [User, Group]
 
+    ## Uncomment these lines to add elasticsearch-clusters samples
+    # - type: url
+    #   target: ../../examples/es-clusters.yaml
+
     ## Uncomment these lines to add more example data
     # - type: url
     #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all.yaml
@@ -101,3 +105,16 @@ catalog:
     #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/acme-corp.yaml
     #   rules:
     #     - allow: [User, Group]
+
+
+# Config for the elasticsarch-clusters plugin
+#elasticsearch-clusters:
+#  # [optional] These values will be used in patterns to replace the {region} reference
+#  regions:
+#    - eu-region
+#    - us1-region
+#    - us2-region
+#
+#  # [Optional] Set cache control for the backend
+#  # https://datatracker.ietf.org/doc/html/rfc7234
+#  cache-control: "public, max-age=60, must-revalidate"

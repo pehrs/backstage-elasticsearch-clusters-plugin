@@ -28,9 +28,7 @@ import {
   HeaderLabel,
   // SupportButton,
 } from '@backstage/core-components';
-import { ExampleFetchComponent } from '../EsClusterList';
-import { ExampleFetchComponent2 } from '../EsClusterList/ExampleFetchComponent';
-import { EsClustersList } from '../EsClusterList/EsClustersList';
+import { EsClusterTable } from '../EsClusterList/EsClusterTable';
 
 
 export const EsClusterPage = () => (
@@ -40,19 +38,9 @@ export const EsClusterPage = () => (
       <HeaderLabel label="Lifecycle" value="Alpha" />
     </Header>
     <Content key={crypto.randomUUID()}>
-      {/* <ContentHeader title="Plugin title">
-        <SupportButton>Manage your Elasticsearch clusters.</SupportButton>
-      </ContentHeader> */}
       <Grid key={crypto.randomUUID()} container spacing={3} direction="column">
-        {/* <Grid item>
-          <InfoCard title="Information card">
-            <Typography variant="body1">
-              All content should be wrapped in a card like this.
-            </Typography>
-          </InfoCard>
-        </Grid> */}
         <Grid key={crypto.randomUUID()} item>
-          <EsClustersList key={crypto.randomUUID()}/>
+          <EsClusterTable key={crypto.randomUUID()}/>
         </Grid>
       </Grid>
     </Content>

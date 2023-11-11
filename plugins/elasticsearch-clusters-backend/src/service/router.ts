@@ -3,49 +3,33 @@ import { Config } from '@backstage/config';
 import express, { response } from 'express';
 import Router from 'express-promise-router';
 import { Logger } from 'winston';
-import { getStatus as getStatusV1 } from './v1/status'
+import { getStatus as getStatusV2 } from './v2/status'
 import { EsConfig } from './config'
+import { CatalogApi } from '@backstage/catalog-client';
 
 export interface RouterOptions {
   config: Config;
   logger: Logger;
-}
-
-
-export const getEsUrls = function (esConfig: EsConfig | undefined): string[] {
-  if (!esConfig) {
-    return [];
-  }
-  if (esConfig.cluster_links) {
-    return esConfig.cluster_links?.flatMap(cluster_link => {
-      if (esConfig.regions) {
-        return esConfig.regions?.map(region => {
-          return cluster_link.replace("{region}", region)
-        })
-      } else {
-        return cluster_link;
-      }
-    });
-  } else {
-    return [];
-  }
+  catalogApi: CatalogApi;
 }
 
 export async function createRouter(
   options: RouterOptions,
 ): Promise<express.Router> {
-  const { config, logger } = options;
+  const { config, logger, catalogApi } = options;
+
   var esConfig: EsConfig | undefined = undefined
 
   if (config.has("elasticsearch-clusters")) {
     esConfig = {
-      cerebro_link: config.getOptionalString("elasticsearch-clusters.cerebro_link"),
-      kibana_link: config.getOptionalString("elasticsearch-clusters.kibana_link"),
-      cluster_links: config.getOptionalStringArray("elasticsearch-clusters.cluster_links"),
       regions: config.getOptionalStringArray("elasticsearch-clusters.regions"),
+      cacheControl: config.getOptionalString("elasticsearch-clusters.cache-control"),
     }
   } else {
-    logger.error("No elasticsearch-clusters config found in app-config.yaml")
+    esConfig = {
+      regions: [],
+      cacheControl: undefined,
+    }
   }
 
   const router = Router();
@@ -63,16 +47,8 @@ export async function createRouter(
       response.json({ status: 'no-config' });
     }
   });
-  router.use('/v1/status', async (req, res) => {
-    if (esConfig) {
-      await getStatusV1(esConfig, res);
-    } else {
-      res.status(200).json({
-        status: "no-config",
-        esConfig: undefined,
-        clusterStatus: undefined,
-      })
-    }
+  router.use('/v2/status', async (req, res) => {
+      await getStatusV2(catalogApi, esConfig, res);
   });
   router.use(errorHandler());
   return router;

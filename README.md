@@ -10,7 +10,7 @@ This is a combination of 2 plugins (the [frontend](./plugins/elasticsearch-clust
 Example screenshot: showing status of 17 es clusters in 5 regions.
 
 If you are working with elasticsearch clusters and have not yet discovered [Cerebro](https://github.com/lmenezes/cerebro), please do. 
-This plugin will optionally integrate with Cerebro.
+The elasticsearch-clusters plugins will optionally integrate with Cerebro if you specify the url to your cerebro service in the config.
 
 ## Installation
 
@@ -99,44 +99,84 @@ Make sure you have created a [backstage-app](https://backstage.io/docs/getting-s
 
 ### Configure the plugin
 
-   In order for the elasticsearch plugins to work you need to add a configuration to your `/app-config.yaml`
+In order for this plugins to work you need to add your elasticsearch 
+clusters as services and components into the [backstage software catalog](https://backstage.io/docs/features/software-catalog/).
 
-   Most basic configuration should just list your Elasticsearch cluster links:
-   ```yaml
-   elasticsearch-clusters:
-     cluster_links:
-       - "http://es1.europe-west1.my-domain.net:9200"
-       - "http://es1.us-central1.my-domain.net:9200"
-       - "http://es1.us-east1.my-domain.net:9200"
-       - "http://es2.europe-west1.my-domain.net:9200"
-       - "http://es2.us-central1.my-domain.net:9200"
-       - "http://es2.us-east1.my-domain.net:9200"
-   ```
+Look at the [examples/es-clusters.yaml](examples/es-clusters.yaml) samples for details 
+on what information should be registered with your ES components.
 
-   And here's a more elaborate configuration:
+Here's a sample declaration for an Elasticsearch cluster discovered via SVR records:
+```yaml
+---
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-component
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: escluster1
+  description: Regional sample cluster discvered via SVR
+  label:
+    # HTTP scheme for srv lookup responses. Supported values are: "http" and "https".
+    # Default: http
+    - elasticsearch-plugin/srv-scheme: http
 
-   ```yaml
-   elasticsearch-clusters:
-     cluster_links:
-       - "http://es1.{region}.my-domain.net:9200"
-       - "http://es2.{region}.my-domain.net:9200"
-     # [Optional] regions will be used in the cluster_links to replace the {region} value
-     regions:
-       - "europe-west1"
-       - "us-central1"
-       - "us-west1"
-     # [Optional] Link to cerebro (available variables: cluster_link)
-     cerebro_link: "http://cerebro.europe-west1.my-domain.net:9000/#!/overview?host={cluster_link}"
-     # [Optional] Link to kibana (available variables: cluster_host)
-     kibana_link: "http://{cluster_host}:5601"
-   ```
+    # Optional if regions are declared but the es-endpoint link is
+    # a link to just one cluster you can specify the region with this label
+	# Every region becomes a column in the ES table.
+    # This value is not used if the es-endpoint contains a {region} variable
+    # - elasticsearch-plugin/region: gew1
+
+    # The endpoint (pattern) to the cluster
+    # Varialbes:
+    #    {region}  - Region values declared in you app-config.yaml (elasticsearch-clusters.regions)
+    #
+    # SRV Lookup example
+    - elasticsearch-plugin/es-endpoint: "srv:_escluster1-master._http.{region}.mydomain.net"
+    # HTTP Example
+    # - elasticsearch-plugin/es-endpoint: "http://my-cluster.{region}.domain.com:9200"
+    
+    # [Optionial] Links to Cerebro and Kibana
+    # Variables:
+    #   {es-endpoint}           - Full value of es-endpoint (example "https://my-cluster.region1.domain.com:9200")
+    #   {es-endpoint.hostname}  - Hostname from the es-endpoint (example "my-cluster.region1.domain.com")
+    #   {es-endpoint.host}      - Host from the es-endpoint URL (example "my-cluster.region1.domain.com:9200")
+    #   {es-endpoint.port}      - Port from the es-endpoint (example "9200")
+    #   {es-endpoint.scheme}    - Scheme from the es-endpoint (example "https")
+    #   {es-endpoint.protocol}  - Protocol from the es-endpoint (example "https:")
+    - elasticsearch-plugin/kibana-endpoint: "{es-endpoint.scheme}://{es-endpoint.hostname}:5601"
+    - elasticsearch-plugin/cerebro-endpoint: "http://cerebro.eu-region.mydomain.net:9000/#!/overview?host={es-endpoint}"
+  tags:
+    - elasticsearch
+spec:
+  type: service
+  lifecycle: experimental
+  owner: guests
+  domain: elasticsearch-clusters
+  system: es-clusters
+```
+
+#### [Optional] Region variable
+
+If you want to use the `{region}` variable in your component declarations then you 
+need to set the list of regions in your [`app-config.yaml`](app-config.yaml)
+
+Every region will become a column in the ES cluster table.
+
+Here's an example of regions declared in `app-config.yaml`
+```yaml
+elasticsearch-clusters:
+# [optional] These values will be used in patterns to replace the {region} reference
+  regions:
+	- eu-region
+    - us1-region
+	- us2-region
+```
+
+If no regions are declared then the table will just have one column for all discovered ES clusters.
 
 
 ## TODO
 
 - Figure out how to "publish" the plugins.
-- Add support for elasticsearch clusters declared as components in the catalog.
-
 
 
 ## Developer notes

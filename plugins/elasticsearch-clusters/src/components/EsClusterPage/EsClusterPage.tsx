@@ -28,9 +28,7 @@ import {
   HeaderLabel,
   // SupportButton,
 } from '@backstage/core-components';
-import { ExampleFetchComponent } from '../EsClusterList';
-import { ExampleFetchComponent2 } from '../EsClusterList/ExampleFetchComponent';
-import { EsClustersList } from '../EsClusterList/EsClustersList';
+import { EsClusterTable } from '../EsClusterList/EsClusterTable';
 
 
 export const EsClusterPage = () => (
@@ -52,7 +50,7 @@ export const EsClusterPage = () => (
           </InfoCard>
         </Grid> */}
         <Grid key={crypto.randomUUID()} item>
-          <EsClustersList key={crypto.randomUUID()}/>
+          <EsClusterTable key={crypto.randomUUID()}/>
         </Grid>
       </Grid>
     </Content>

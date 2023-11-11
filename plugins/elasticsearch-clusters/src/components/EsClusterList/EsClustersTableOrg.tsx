@@ -87,7 +87,7 @@ function getCerebroLogo(status: string) {
     return CerebroLogo_red;
 }
 
-type EsClusterTableProps = {
+type EsClusterTableOrgProps = {
     clusterInfo: any;
 };
 
@@ -465,7 +465,7 @@ function renderCell(
     </div>);
 }
 
-export const EsClusterTable = ({ clusterInfo }: EsClusterTableProps) => {
+export const EsClusterTableOrg = ({ clusterInfo }: EsClusterTableOrgProps) => {
     const [columns, data] = getColumnsAndData(clusterInfo);
     return (<Table
         key={crypto.randomUUID()}

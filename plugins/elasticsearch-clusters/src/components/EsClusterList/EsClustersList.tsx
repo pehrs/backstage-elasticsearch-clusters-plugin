@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useApi, configApiRef } from '@backstage/core-plugin-api';
 import { Link, Progress } from '@backstage/core-components';
-import { EsClusterTable } from './EsClustersTable';
+import { EsClusterTableOrg } from './EsClustersTableOrg';
 import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles({
@@ -35,7 +35,7 @@ export const EsClustersList = () => {
     }
     // console.log("clusterInfo", clusterInfo)
     if (clusterInfo && clusterInfo["status"] === "ok") {
-        return (<EsClusterTable key={crypto.randomUUID()} clusterInfo={clusterInfo} />)
+        return (<EsClusterTableOrg key={crypto.randomUUID()} clusterInfo={clusterInfo} />)
     } else {
         return (<span>No <span className={classes.pre}>elasticsearch-clusters</span> 
         &nbsp;config found in <span className={classes.pre}>/app-config.yaml</span><br/>

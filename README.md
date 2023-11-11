@@ -43,38 +43,38 @@ Make sure you have created a [backstage-app](https://backstage.io/docs/getting-s
    *  Add to [`packages/backend/package.json`](packages/backend/package.json):
 
       ```tsx
-	  "@pehrs/plugin-elasticsearch-clusters-backend": "^0.1.0",
+    "@pehrs/plugin-elasticsearch-clusters-backend": "^0.1.0",
       ```
 
    *  Add to [`packages/backend/src/index.ts`](packages/backend/src/index.ts):
 
       ```tsx
-	  import elasticsearchClusters from './plugins/elasticsearch-clusters';
-	  ...
-	  const elasticsearchClustersEnv = useHotMemoize(module, () => createEnv('elasticsearchClusters'));
-	  ...
-	  apiRouter.use('/elasticsearch-clusters', await elasticsearchClusters(elasticsearchClustersEnv));
+      import elasticsearchClusters from './plugins/elasticsearch-clusters';
+      ...
+      const elasticsearchClustersEnv = useHotMemoize(module, () => createEnv('elasticsearchClusters'));
+      ...
+      apiRouter.use('/elasticsearch-clusters', await elasticsearchClusters(elasticsearchClustersEnv));
       ```
 
    *  Add the file [`packages/backend/src/plugins/elasticsearch-clusters.ts`](packages/backend/src/plugins/elasticsearch-clusters.ts):
       ```tsx
-	  import { createRouter } from '@pehrs/plugin-elasticsearch-clusters-backend';
-	  import { Router } from 'express';
-	  import { PluginEnvironment } from '../types';
-	  import { CatalogClient } from '@backstage/catalog-client';
+      import { createRouter } from '@pehrs/plugin-elasticsearch-clusters-backend';
+      import { Router } from 'express';
+      import { PluginEnvironment } from '../types';
+      import { CatalogClient } from '@backstage/catalog-client';
 
-	  export default async function createPlugin(
-		env: PluginEnvironment,
-	  ): Promise<Router> {
-		const catalogApi = new CatalogClient({ discoveryApi: env.discovery });
-		return await createRouter({
-		  logger: env.logger,
-		  config: env.config,
-		  catalogApi,
-		}
-		);
-	  }
-	  ```
+      export default async function createPlugin(
+        env: PluginEnvironment,
+      ): Promise<Router> {
+        const catalogApi = new CatalogClient({ discoveryApi: env.discovery });
+        return await createRouter({
+          logger: env.logger,
+          config: env.config,
+          catalogApi,
+        }
+        );
+      }
+      ```
 
    *  Add to [`packages/app/package.json`](packages/app/package.json):
 
@@ -85,15 +85,15 @@ Make sure you have created a [backstage-app](https://backstage.io/docs/getting-s
    *  Add to [`packages/app/src/App.tsx`](packages/app/src/App.tsx):
 
       ```tsx
-	  import { ElasticsearchClustersPage } from '@pehrs/plugin-elasticsearch-clusters';
-	  ...
-	  <Route path="/elasticsearch-clusters" element={<ElasticsearchClustersPage />} />
+      import { ElasticsearchClustersPage } from '@pehrs/plugin-elasticsearch-clusters';
+      ...
+      <Route path="/elasticsearch-clusters" element={<ElasticsearchClustersPage />} />
       ```
 
    *  [OPTIONAL] Add to [`packages/app/src/components/Root/Root.tsx`](packages/app/src/components/Root/Root.tsx):
       ```tsx
-	  import EsLogo from '@material-ui/icons/Search';
-	  ...
+      import EsLogo from '@material-ui/icons/Search';
+      ...
       <SidebarItem icon={EsLogo} to="elasticsearch-clusters" text="ES Clusters" />
       ```
 
@@ -121,7 +121,7 @@ metadata:
 
     # Optional if regions are declared but the es-endpoint link is
     # a link to just one cluster you can specify the region with this label
-	# Every region becomes a column in the ES table.
+    # Every region becomes a column in the ES table.
     # This value is not used if the es-endpoint contains a {region} variable
     # - elasticsearch-plugin/region: gew1
 

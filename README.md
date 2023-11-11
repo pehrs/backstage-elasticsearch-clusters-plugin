@@ -133,7 +133,7 @@ metadata:
     - elasticsearch-plugin/es-endpoint: "srv:_escluster1-master._http.{region}.mydomain.net"
     # HTTP Example
     # - elasticsearch-plugin/es-endpoint: "http://my-cluster.{region}.domain.com:9200"
-    
+
     # [Optionial] Links to Cerebro and Kibana
     # Variables:
     #   {es-endpoint}           - Full value of es-endpoint (example "https://my-cluster.region1.domain.com:9200")
@@ -166,9 +166,9 @@ Here's an example of regions declared in `app-config.yaml`
 elasticsearch-clusters:
 # [optional] These values will be used in patterns to replace the {region} reference
   regions:
-	- eu-region
+    - eu-region
     - us1-region
-	- us2-region
+    - us2-region
 ```
 
 If no regions are declared then the table will just have one column for all discovered ES clusters.

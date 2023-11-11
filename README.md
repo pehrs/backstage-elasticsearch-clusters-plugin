@@ -10,7 +10,7 @@ This is a combination of 2 plugins (the [frontend](./plugins/elasticsearch-clust
 Example screenshot: showing status of 17 es clusters in 5 regions.
 
 If you are working with elasticsearch clusters and have not yet discovered [Cerebro](https://github.com/lmenezes/cerebro), please do. 
-This plugin will optionally integrate with Cerebro.
+The elasticsearch-clusters plugins will optionally integrate with Cerebro if you specify the url to your cerebro service in the config.
 
 ## Installation
 
@@ -120,7 +120,8 @@ Make sure you have created a [backstage-app](https://backstage.io/docs/getting-s
      cluster_links:
        - "http://es1.{region}.my-domain.net:9200"
        - "http://es2.{region}.my-domain.net:9200"
-     # [Optional] regions will be used in the cluster_links to replace the {region} value
+     # [Optional] regions will be used in the cluster_links to 
+	 #            replace the {region} value above and become a column each.
      regions:
        - "europe-west1"
        - "us-central1"

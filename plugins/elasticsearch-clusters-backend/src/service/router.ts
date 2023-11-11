@@ -4,11 +4,14 @@ import express, { response } from 'express';
 import Router from 'express-promise-router';
 import { Logger } from 'winston';
 import { getStatus as getStatusV1 } from './v1/status'
+import { getStatus as getStatusV2 } from './v2/status'
 import { EsConfig } from './config'
+import { CatalogApi } from '@backstage/catalog-client';
 
 export interface RouterOptions {
   config: Config;
   logger: Logger;
+  catalogApi: CatalogApi;
 }
 
 
@@ -34,7 +37,8 @@ export const getEsUrls = function (esConfig: EsConfig | undefined): string[] {
 export async function createRouter(
   options: RouterOptions,
 ): Promise<express.Router> {
-  const { config, logger } = options;
+  const { config, logger, catalogApi } = options;
+
   var esConfig: EsConfig | undefined = undefined
 
   if (config.has("elasticsearch-clusters")) {
@@ -66,6 +70,17 @@ export async function createRouter(
   router.use('/v1/status', async (req, res) => {
     if (esConfig) {
       await getStatusV1(esConfig, res);
+    } else {
+      res.status(200).json({
+        status: "no-config",
+        esConfig: undefined,
+        clusterStatus: undefined,
+      })
+    }
+  });
+  router.use('/v2/status', async (req, res) => {
+    if (esConfig) {
+      await getStatusV2(catalogApi, esConfig, res);
     } else {
       res.status(200).json({
         status: "no-config",

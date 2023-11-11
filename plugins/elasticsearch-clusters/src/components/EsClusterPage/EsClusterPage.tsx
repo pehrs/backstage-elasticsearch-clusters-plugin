@@ -38,17 +38,7 @@ export const EsClusterPage = () => (
       <HeaderLabel label="Lifecycle" value="Alpha" />
     </Header>
     <Content key={crypto.randomUUID()}>
-      {/* <ContentHeader title="Plugin title">
-        <SupportButton>Manage your Elasticsearch clusters.</SupportButton>
-      </ContentHeader> */}
       <Grid key={crypto.randomUUID()} container spacing={3} direction="column">
-        {/* <Grid item>
-          <InfoCard title="Information card">
-            <Typography variant="body1">
-              All content should be wrapped in a card like this.
-            </Typography>
-          </InfoCard>
-        </Grid> */}
         <Grid key={crypto.randomUUID()} item>
           <EsClusterTable key={crypto.randomUUID()}/>
         </Grid>

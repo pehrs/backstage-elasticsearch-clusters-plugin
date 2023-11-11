@@ -95,7 +95,7 @@ catalog:
     ## Uncomment these lines to add elasticsearch-clusters samples
     # - type: url
     #   target: ../../examples/es-clusters.yaml
-    
+
     ## Uncomment these lines to add more example data
     # - type: url
     #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all.yaml
@@ -106,11 +106,15 @@ catalog:
     #   rules:
     #     - allow: [User, Group]
 
-    
+
 # Config for the elasticsarch-clusters plugin
 #elasticsearch-clusters:
-#  # These values will be used in patterns to replace the {region} reference
+#  # [optional] These values will be used in patterns to replace the {region} reference
 #  regions:
 #    - eu-region
 #    - us1-region
 #    - us2-region
+#
+#  # [Optional] Set cache control for the backend
+#  # https://datatracker.ietf.org/doc/html/rfc7234
+#  cache-control: "public, max-age=60, must-revalidate"

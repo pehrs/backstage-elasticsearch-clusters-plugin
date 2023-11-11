@@ -96,6 +96,16 @@ function getColumns(clusterStatus: any): TableColumn[] {
     return columns;
 }
 
+function getStatusClassName(status: string) {
+    const classes = useStyles();
+    switch (status) {
+        case "green":
+            return classes.green;
+        case "yellow":
+            return classes.yellow;
+    }
+    return classes.red;
+}
 function getCerebroLogo(status: string) {
     switch (status) {
         case "green":
@@ -130,7 +140,7 @@ function generateReport(classes, clusterRoot:any, region:string) {
 function renderCell(classes, cluster: any, region: string) {
     const regionDetails = cluster[region];
     const status = regionDetails?.status;
-    const status_class = "green"
+    const status_class = getStatusClassName(status);
     const cerebro_url = regionDetails?.cerebro
 
     const cerebro_logo = getCerebroLogo(status);
@@ -239,22 +249,17 @@ export const EsClusterTable = () => {
     const config = useApi(configApiRef)
     const backendUrl = config.getString('backend.baseUrl');
 
-    console.log("backendUrl", backendUrl)
-
     useEffect(() => {
         console.log("before fetch")
         fetch(`${backendUrl}/api/elasticsearch-clusters/v2/status`)
             .then((result) => result.json())
             .then((data) => {
-                console.log("data", data);
                 setClusterStatus(data)
-                // setLoading(false)
             })
     }, [])
     if (clusterStatus == null) {
-        return (<Progress />)
+        return (<div><Progress/></div>)
     }
-    // console.log("clusterInfo", clusterInfo)
     if (clusterStatus && clusterStatus["status"] === "ok") {
         return (<EsClusterStatusTable clusterStatus={clusterStatus}/>)
     } else {

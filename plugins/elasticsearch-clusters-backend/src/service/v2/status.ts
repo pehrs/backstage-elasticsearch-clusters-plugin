@@ -213,7 +213,8 @@ function getSumOfSizes(indices: any, fieldName: string): number {
         .reduce((sum, current) => sum + current, 0.0);
 }
 
-export async function getStatus(catalogApi: CatalogApi, esConfig: EsConfig | undefined, response: any) {
+export async function getStatus(catalogApi: CatalogApi,
+    esConfig: EsConfig | undefined, response) {
 
     const esClusters = await catalogApi.getEntities({
         // The filter is a logical OR operation
@@ -222,9 +223,7 @@ export async function getStatus(catalogApi: CatalogApi, esConfig: EsConfig | und
         ],
     })
 
-    // elasticsearch-plugin/kibana-endpoint: "{es-endpoint.scheme}://{es-endpoint.host}:5601"
-
-    var regions: string[] = esConfig?.regions ? esConfig?.regions : [""];
+    var regions: string[] = esConfig?.regions ? esConfig?.regions : [];
 
     const lookupPromises: Promise<any>[] = esClusters.items.flatMap(item => {
         return lookupEndpoint(regions, item.metadata)
@@ -240,16 +239,9 @@ export async function getStatus(catalogApi: CatalogApi, esConfig: EsConfig | und
     })
     const statusResults = (await Promise.all(statusPromises));
 
-    // statusResult => list of:
-    // {
-    //   "name": "sample",
-    //   "region": "gew1",
-    //   "health": [],
-    //   "indices": [],
-    //   "aliases": [],
-    // }
-
     const clusterStatus: any = {}
+
+    const collectedRegions: Set<string> = new Set();
 
     statusResults.forEach(statusRes => {
         const name = statusRes.name;
@@ -273,24 +265,28 @@ export async function getStatus(catalogApi: CatalogApi, esConfig: EsConfig | und
         if (region in clusterRes) {
             regionRes = clusterRes[region];
         }
+        collectedRegions.add(region);
         clusterRes[region] = regionRes;
         regionRes["status"] = health[0].status;
         regionRes["kibana"] = kibana;
         regionRes["cerebro"] = cerebro;
-
-        // "docCount": 19929,
         regionRes["docCount"] = getSum(indices, "docs.count");
-        
-        // "totalStorage": 2928383,
         regionRes["totalStorage"] = getSumOfSizes(indices, "store.size");
-        // "primaryStorage": 9292882,
         regionRes["primaryStorage"] = getSumOfSizes(indices, "pri.store.size");
 
     });
 
+    if (esConfig?.regions === undefined || esConfig?.regions.length === 0) {
+        regions = Array.from(collectedRegions.values());
+    }
+
+    if(esConfig?.cacheControl !== undefined) {
+        response.setHeader("Cache-Control", esConfig.cacheControl)
+    }
+
     response.json({
         status: 'ok',
-        regions: esConfig?.regions,
+        regions: regions,
         clusterStatus: clusterStatus,
     });
 }
